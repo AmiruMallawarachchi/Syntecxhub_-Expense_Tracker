@@ -14,7 +14,7 @@ const Input = ({ value, onChange, placeholder,label, type }) => {
             <input 
                 type={type === "password" ? (showpassword ? "text" : "password") : type}
                 placeholder={placeholder}
-                className="w-full border border-slate-200 bg-slate-50 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+                className="w-full border border-slate-200 bg-slate-50 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary pr-10"
                 value={value}
                 onChange={(e) => onChange(e)}
                 />
@@ -24,14 +24,14 @@ const Input = ({ value, onChange, placeholder,label, type }) => {
                     <>
                     {showpassword ? (
                         <FaRegEye
-                        size={22}
-                        className="text-primary cursor-pointer"
+                        size={20}
+                        className="text-primary cursor-pointer absolute right-3 top-1/2 -translate-y-1/2"
                         onClick={() => toggleShowPassword()}
                     />
                     ) : (
                         <FaRegEyeSlash
-                        size={22}
-                        className="text-slate-400 cursor-pointer"
+                        size={20}
+                        className="text-slate-400 cursor-pointer absolute right-3 top-1/2 -translate-y-1/2"
                         onClick={() => toggleShowPassword()}
                         />
                     )}

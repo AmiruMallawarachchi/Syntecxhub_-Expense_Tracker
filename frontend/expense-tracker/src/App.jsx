@@ -1,45 +1,41 @@
-import React from 'react'
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-}  from "react-router-dom";
-import Login from './pages/Auth/Login';
-import SignUp from './pages/Auth/SignUp';
-import Home from './pages/Dashboard/Home';
-import Income from './pages/Dashboard/Income';
-import Expense from './pages/Dashboard/Expense';
-
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Auth/Login";
+import SignUp from "./pages/Auth/SignUp";
+import Home from "./pages/Dashboard/Home";
+import Income from "./pages/Dashboard/Income";
+import Expense from "./pages/Dashboard/Expense";
+import { useUser } from "./context/UserContext";
 
 const App = () => {
   return (
-    <div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Root />} />
-          <Route path="/login" exact element={<Login/>} />
-          <Route path="/signup" exact element={<SignUp/>} />
-          <Route path="/home" exact element={<Home />} />
-          <Route path="/income" exact element={<Income/>} />
-          <Route path="/expense" exact element={<Expense/>} />
-        </Routes>
-      </Router>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Root />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/dashboard" element={<ProtectedRoute component={<Home />} />} />
+        <Route path="/income" element={<ProtectedRoute component={<Income />} />} />
+        <Route path="/expense" element={<ProtectedRoute component={<Expense />} />} />
+      </Routes>
+    </Router>
   );
 };
 
-export default App
+export default App;
 
 const Root = () => {
-  // check if token exists in local storage
+  const isAuthenticated = !!localStorage.getItem("token");
+  return isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />;
+};
+
+const ProtectedRoute = ({ component }) => {
+  const { loading } = useUser();
   const isAuthenticated = !!localStorage.getItem("token");
 
-  // Redirect to dashboard if authenticated, otherwise to login
-  return isAuthenticated ? ( 
-    <Navigate to="/dashboard" /> 
-  ) : (
-  <Navigate to="/login" />
-  );
+  if (loading) {
+    return <div className="p-10 text-slate-600">Loading...</div>;
+  }
+
+  return isAuthenticated ? component : <Navigate to="/login" />;
 };
 

@@ -1,7 +1,11 @@
-import { useState } from 'react';
-import AuthLayout from '../../components/layouts/AuthLayout';
-import { Link, useNavigate } from 'react-router-dom';
-import Input from '../../components/Inputs/Input';
+import { useState } from "react";
+import AuthLayout from "../../components/layouts/AuthLayout";
+import { Link, useNavigate } from "react-router-dom";
+import Input from "../../components/Inputs/Input";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
+import toast from "react-hot-toast";
+import { useUser } from "../../context/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,9 +13,31 @@ const Login = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   // Handle login form submission
-  const handleLogin = async (e) => {}
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email,
+        password
+      });
+      localStorage.setItem("token", response.data.token);
+      setUser(response.data.user);
+      toast.success("Welcome back!");
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err?.response?.data?.message || "Login failed");
+    }
+  };
     
 
   return (

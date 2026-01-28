@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import CARD_2 from '../../assets/images/card2.png';
 import { LuTrendingUpDown } from 'react-icons/lu';
 
